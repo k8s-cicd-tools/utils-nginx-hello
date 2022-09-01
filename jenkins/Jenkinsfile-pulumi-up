@@ -1,0 +1,42 @@
+pipeline {
+    agent {
+        label 'pulumi'
+    }
+
+    environment {
+        PULUMI_ACCESS_TOKEN=credentials('PULUMI_ACCESS_TOKEN')
+    }
+
+    stages {
+        stage('Check if the directory exists') {
+            when { expression { return fileExists ('utils-nginx-hello') } }
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage('Repo clone') {
+            steps {
+                git url: 'https://github.com/k8s-cicd-tools/utils-nginx-hello.git', branch: 'main'
+            }
+        }
+
+        stage ("Pulumi up") {
+            steps {
+                nodejs(nodeJSInstallationName: "node 16.17.0") {
+                    withEnv(["PATH+PULUMI=$HOME/.pulumi/bin"]) {
+                        sh "cd pulumi && npm install"
+                        sh "cd pulumi; pulumi stack select dev"
+                        sh "cd pulumi; pulumi up --yes"
+                    }
+                }
+            }
+        }
+
+        stage('Cleaning') {
+            steps {
+                deleteDir()
+            }
+        }
+    }
+}
