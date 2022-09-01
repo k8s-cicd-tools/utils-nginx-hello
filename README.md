@@ -11,7 +11,7 @@ It is a Deployment with 3 replicas and a Service exposing port 8080.
 3. Run `$ npm install`
 4. Run `$ pulumi up` to create the kubernetes resources.
 5. Run `$ kubectl get pods` 
-6. Forward a local port to a port on the Pod. e.g. `$ kubectl port-forward NAME-POD 8080:8080`
+6. Forward a local port to a port on the Pod. e.g. `$ kubectl port-forward <pod-name>  8080:8080`
 7. Open a browser and navigate to http://localhost:8080
 8. Run `$ pulumi destroy` to delete the kubernetes resources.
 
@@ -20,7 +20,7 @@ Alternatively, you can use kubectl directly:
 ```
 $ kubectl apply -f path/to/kubernetes/manifests/nginx-hello.yaml
 $ kubectl get pods
-$ kubectl port-forward NAME-POD 8080:8080
+$ kubectl port-forward <pod-name>  8080:8080
 open http://localhost:8080
 $ kubectl delete -f path/to/kubernetes/manifests/nginx-hello.yaml
 ```
